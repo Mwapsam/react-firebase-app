@@ -4,13 +4,14 @@ import { Grid,Paper, Avatar, TextField, Button, Typography, Link } from '@materi
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import GoogleButton from "react-google-button";
 import { useUserAuth } from "../context/UserAuthContext";
 
 const Login=({handleChange})=>{
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { logIn } = useUserAuth();
+  const { logIn, googleSignIn } = useUserAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -21,6 +22,16 @@ const Login=({handleChange})=>{
       navigate("/home");
     } catch (err) {
       setError(err.message);
+    }
+  };
+
+  const handleGoogleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      await googleSignIn();
+      navigate("/home");
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -55,10 +66,13 @@ const Login=({handleChange})=>{
                 </Link>
                 </Typography>
                 <Typography > Do you have an account ?
-                     <Link href="#" onClick={()=>handleChange("event", 1)} >
+                     <Link to='signup' onClick={()=>handleChange("event", 1)} >
                         Sign Up 
-                </Link>
+                      </Link>
                 </Typography>
+                <GoogleButton style={btnstyle}
+                  onClick={handleGoogleSignIn}
+                />
             </Paper>
         </Grid>
     )
